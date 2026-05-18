@@ -9,17 +9,21 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
 	private final UserRepository userRepository;
+	private final org.springframework.security.crypto.password.PasswordEncoder encoder;
 
-	public AuthController(UserRepository userRepository) {
+	public AuthController(UserRepository userRepository,
+			org.springframework.security.crypto.password.PasswordEncoder encoder) {
 		this.userRepository = userRepository;
+		this.encoder = encoder;
 	}
 
 	@PostMapping("/signup")
 	public String registerUser(@RequestBody User user) {
 		if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-			return "Error: This username already exists!";
+			return "Error: This name is already taken!";
 		}
+		user.setPassword(encoder.encode(user.getPassword()));
 		userRepository.save(user);
-		return "User successfully registered!";
+		return "Registration completed!";
 	}
 }

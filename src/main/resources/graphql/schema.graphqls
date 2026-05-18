@@ -1,0 +1,14 @@
+type Flight {
+    id: ID!
+    flightNumber: String!
+    departureCity: String!
+    arrivalCity: String!
+    price: Float!
+}
+
+type Query {
+ 
+    allFlights: [Flight!]!
+
+    flightById(id: ID!): Flight
+}
