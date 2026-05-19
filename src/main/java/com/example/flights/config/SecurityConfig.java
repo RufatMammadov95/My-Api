@@ -6,19 +6,24 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/login/**", "/oauth2/**")
-						.permitAll().requestMatchers(org.springframework.http.HttpMethod.GET, "/api/flights/**")
-						.permitAll().requestMatchers(org.springframework.http.HttpMethod.GET, "/graphql/**").permitAll()
+
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/graphiql/**",
+								"/graphql/**")
+						.permitAll()
+
+						.requestMatchers("/api/auth/signup", "/api/auth/login", "/api/flights/**").permitAll()
+
 						.anyRequest().authenticated())
-				.httpBasic(withDefaults()).oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/flights", true));
+
+				.oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/api/flights", true));
 
 		return http.build();
 	}
