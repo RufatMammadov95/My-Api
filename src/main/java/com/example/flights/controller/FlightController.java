@@ -9,7 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/flights")
 public class FlightController {
@@ -25,6 +27,9 @@ public class FlightController {
 	public Page<Flight> getFlights(@RequestParam(required = false) String origin,
 			@RequestParam(required = false) String dest, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "20") int size) {
+
+		page = Math.max(page, 0);
+		size = Math.max(1, Math.min(size, 20));
 
 		if (origin != null && dest != null) {
 			return flightRepository.findByDepartureCityAndArrivalCity(origin, dest, PageRequest.of(page, size));
