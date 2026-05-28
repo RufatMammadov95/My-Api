@@ -83,6 +83,20 @@ $env:GOOGLE_CLIENT_SECRET="your-google-client-secret"
 .\mvnw.cmd spring-boot:run
 ```
 
+For Render deployment, add these environment variables in the Render service settings:
+
+```text
+PORT=8080
+DB_URL=jdbc:postgresql://<render-postgres-host>:5432/<database-name>
+DB_USERNAME=<render-postgres-user>
+DB_PASSWORD=<render-postgres-password>
+JWT_SECRET=<at-least-32-character-secret>
+GOOGLE_CLIENT_ID=<google-client-id>
+GOOGLE_CLIENT_SECRET=<google-client-secret>
+```
+
+Do not use `localhost` for PostgreSQL on Render. `localhost` means the Render web container itself, not your Render PostgreSQL database.
+
 The local API will be available at:
 
 ```text

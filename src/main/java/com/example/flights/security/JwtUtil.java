@@ -18,6 +18,10 @@ public class JwtUtil {
 
 	public JwtUtil(@Value("${app.jwt.secret}") String secret,
 			@Value("${app.jwt.expiration-ms:3600000}") long expiration) {
+		if (secret == null || secret.isBlank() || secret.length() < 32) {
+			throw new IllegalStateException("JWT_SECRET must be set and contain at least 32 characters");
+		}
+
 		this.secret = secret;
 		this.expiration = expiration;
 	}
