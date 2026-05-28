@@ -24,15 +24,17 @@ public class SecurityConfig {
 
 		return http.csrf(csrf -> csrf.disable())
 
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
 				.authorizeHttpRequests(auth -> auth
 
-						.requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-								"/graphiql/**", "/graphql/**")
+						.requestMatchers("/", "/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+								"/graphiql/**", "/graphql/**", "/oauth2/**", "/login/oauth2/**")
 						.permitAll()
 
 						.anyRequest().authenticated())
+
+				.oauth2Login(oauth -> oauth.defaultSuccessUrl("/swagger-ui/index.html", true))
 
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 

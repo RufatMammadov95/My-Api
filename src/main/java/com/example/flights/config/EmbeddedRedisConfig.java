@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @Configuration
+@Profile("!test")
 public class EmbeddedRedisConfig {
 
 	private final int redisPort;

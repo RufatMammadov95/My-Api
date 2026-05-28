@@ -1,10 +1,12 @@
 package com.example.flights.controller;
 
 import com.example.flights.dto.ApiResponse;
+import com.example.flights.dto.AuthRequest;
 import com.example.flights.model.User;
 import com.example.flights.repository.UserRepository;
 import com.example.flights.security.JwtUtil;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -32,27 +34,29 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<ApiResponse> registerUser(@RequestBody User user) {
+	public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody AuthRequest request) {
 
-		if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+		if (userRepository.findByUsername(request.getUsername()).isPresent()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ApiResponse(false, "This name is already taken!"));
 		}
 
-		user.setPassword(encoder.encode(user.getPassword()));
+		User user = new User();
+		user.setUsername(request.getUsername());
+		user.setPassword(encoder.encode(request.getPassword()));
 		userRepository.save(user);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse(true, "Registration completed!"));
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<ApiResponse> login(@RequestBody User loginRequest) {
+	public ResponseEntity<ApiResponse> login(@Valid @RequestBody AuthRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		String token = jwtUtil.generateToken(authentication.getName());
 
-		return ResponseEntity.ok(new ApiResponse(true, token));
+		return ResponseEntity.ok(new ApiResponse(true, "Login successful", token));
 	}
 }

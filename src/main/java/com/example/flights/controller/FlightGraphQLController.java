@@ -5,6 +5,7 @@ import com.example.flights.repository.FlightRepository;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -18,8 +19,17 @@ public class FlightGraphQLController {
 	}
 
 	@QueryMapping
-	public List<Flight> allFlights() {
-		return flightRepository.findAll();
+	public List<Flight> allFlights(@Argument Integer page, @Argument Integer size) {
+
+		if (page == null)
+			page = 0;
+		if (size == null)
+			size = 20;
+
+		page = Math.max(page, 0);
+		size = Math.max(1, Math.min(size, 20));
+
+		return flightRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
 
 	@QueryMapping

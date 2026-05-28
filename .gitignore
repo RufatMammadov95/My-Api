@@ -1,8 +1,11 @@
+# Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
-# Log və müvəqqəti fayllar
+# Logs
 *.log
+
+# Spring / STS
 .apt_generated/
 .factorypath
 .sts4-cache/
@@ -23,5 +26,9 @@ out/
 # VS Code
 .vscode/
 
+# OS
 .DS_Store
 Thumbs.db
+
+# Environment
+.env
