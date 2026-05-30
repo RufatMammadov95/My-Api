@@ -78,6 +78,8 @@ $env:DB_PASSWORD="your-postgres-password"
 $env:JWT_SECRET="change-this-secret-key-to-at-least-32-characters"
 $env:GOOGLE_CLIENT_ID="your-google-client-id"
 $env:GOOGLE_CLIENT_SECRET="your-google-client-secret"
+$env:EMBEDDED_REDIS_ENABLED="true"
+$env:CACHE_TYPE="redis"
 
 .\mvnw.cmd clean install
 .\mvnw.cmd spring-boot:run
@@ -93,9 +95,14 @@ DB_PASSWORD=<render-postgres-password>
 JWT_SECRET=<at-least-32-character-secret>
 GOOGLE_CLIENT_ID=<google-client-id>
 GOOGLE_CLIENT_SECRET=<google-client-secret>
+CACHE_TYPE=simple
+EMBEDDED_REDIS_ENABLED=false
+DATA_LOADER_ENABLED=false
 ```
 
 Do not use `localhost` for PostgreSQL on Render. `localhost` means the Render web container itself, not your Render PostgreSQL database.
+
+Render must detect an open HTTP port during startup. The app binds to Render's `PORT` value and `0.0.0.0` automatically. Keep `CACHE_TYPE=simple` unless you also attach a Redis service and set `REDIS_HOST`, `REDIS_PORT`, and `CACHE_TYPE=redis`.
 
 The local API will be available at:
 
